@@ -1,0 +1,31 @@
+
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mobile-gradio-classifier"
+version = "0.1.0"
+description = "Model-agnostic, phone-friendly Gradio wrapper for image and video classification."
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "Course Staff", email = "noreply@example.edu"}]
+dependencies = [
+    "gradio>=4.0.0",
+    "pillow>=9.5.0",
+    "numpy>=1.24.0",
+    # optional video backends (recommended):
+    "imageio>=2.31.0",
+]
+
+[project.optional-dependencies]
+video = ["opencv-python>=4.5.0"]
+torch = ["torch", "torchvision"]
+tf = ["tensorflow>=2.12"]
+tflite = ["tensorflow"]
+dev = ["ruff", "pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["mobile_gradio_classifier*"]
