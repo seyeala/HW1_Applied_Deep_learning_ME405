@@ -65,6 +65,9 @@ app.launch(share=True)
 - `examples/tf_keras_example.py` — Keras/SavedModel
 - `examples/tf_tflite_example.py` — TFLite interpreter
 
+All three scripts look for a `classes.txt` file that lives right next to them in `examples/` (a starter copy with two placeholder labels ships with the repo).
+Edit that file with one label per line to match your model's outputs. If you delete it or leave it empty, the scripts will fall back to a pair of dummy labels so you can still launch the UI for smoke testing.
+
 ## Module API
 
 ### `MobileClassifierApp`
