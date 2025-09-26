@@ -4,8 +4,14 @@ from mobile_gradio_classifier import MobileClassifierApp
 import torch
 from torchvision import models, transforms
 from PIL import Image
+from pathlib import Path
 
-classes = [line.strip() for line in open("classes.txt") if line.strip()]
+DEFAULT_CLASSES = ["class_one", "class_two"]
+classes_path = Path(__file__).with_name("classes.txt")
+if classes_path.exists():
+    classes = [line.strip() for line in classes_path.read_text().splitlines() if line.strip()] or DEFAULT_CLASSES
+else:
+    classes = DEFAULT_CLASSES
 
 model = models.resnet18(weights=None)
 model.fc = torch.nn.Linear(model.fc.in_features, len(classes))

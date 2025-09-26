@@ -1,12 +1,18 @@
 
 # examples/tf_tflite_example.py
 import os, numpy as np, tensorflow as tf
+from pathlib import Path
 from PIL import Image
 from mobile_gradio_classifier import MobileClassifierApp
 
 TFLITE_PATH = os.environ.get("TFLITE_PATH", "model.tflite")
 IMG_SIZE = int(os.environ.get("IMG_SIZE", "224"))
-classes = [line.strip() for line in open("classes.txt") if line.strip()]
+DEFAULT_CLASSES = ["class_one", "class_two"]
+classes_path = Path(__file__).with_name("classes.txt")
+if classes_path.exists():
+    classes = [line.strip() for line in classes_path.read_text().splitlines() if line.strip()] or DEFAULT_CLASSES
+else:
+    classes = DEFAULT_CLASSES
 
 interpreter = tf.lite.Interpreter(model_path=TFLITE_PATH)
 interpreter.allocate_tensors()
