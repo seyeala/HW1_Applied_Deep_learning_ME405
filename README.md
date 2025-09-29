@@ -68,6 +68,13 @@ app.launch(share=True)
 All three scripts look for a `classes.txt` file that lives right next to them in `examples/` (a starter copy with two placeholder labels ships with the repo).
 Edit that file with one label per line to match your model's outputs. If you delete it or leave it empty, the scripts will fall back to a pair of dummy labels so you can still launch the UI for smoke testing.
 
+To plug in a real TensorFlow/Keras model for the `tf_keras_example.py` demo, export it as a `.keras` file and point the script to it with the `MODEL_PATH` environment variable:
+
+```bash
+MODEL_PATH=/path/to/your/model.keras python examples/tf_keras_example.py
+```
+If that variable is unset or the file cannot be found, the example will build a lightweight in-memory demo network so you can still try the app flow without a trained model.
+
 ## Module API
 
 ### `MobileClassifierApp`
