@@ -75,6 +75,31 @@ MODEL_PATH=/path/to/your/model.keras python examples/tf_keras_example.py
 ```
 If that variable is unset or the file cannot be found, the example will build a lightweight in-memory demo network so you can still try the app flow without a trained model.
 
+## Exporting frames from videos
+
+Use the `mobile_gradio_classifier.export_frames` module (or the `mobile-export-frames` console entry point) to turn a batch of videos into resized image sequences that mirror the structure expected by `MobileClassifierApp`. A sample configuration lives at [`examples/frame_export.yaml`](examples/frame_export.yaml).
+
+```bash
+python -m mobile_gradio_classifier.export_frames --config examples/frame_export.yaml
+# or
+mobile-export-frames --config examples/frame_export.yaml
+```
+
+The tool accepts one or more `input_glob` patterns and writes every matched video to its own subdirectory inside `output_dir`. For example, when `output_dir` is `exports/frames` and a source file named `clip.mp4` is processed, frames are saved under `exports/frames/clip/clip_000000.png`, `clip_000001.png`, and so on. File names include a zero-padded index that reflects the sampling order at the requested `fps`, and the image format is derived from the `format` value in the config (`png`, `jpeg`, etc.). Frames are resized to `size` using Pillow's high-quality `LANCZOS` filter.
+
+### Optional dependencies
+
+Reading videos requires either `opencv-python` or `imageio`; the exporter will automatically prefer OpenCV and fall back to ImageIO if only that package is available. Install whichever backend fits your environment:
+
+```bash
+pip install mobile-gradio-classifier[video]
+# or explicitly
+pip install opencv-python  # OpenCV backend
+pip install imageio        # ImageIO fallback backend
+```
+
+Resizing is handled by Pillow (installed with the base package). Its `LANCZOS` filter ensures high-quality downsampling, which is particularly helpful when generating datasets for model training or validation.
+
 ## Module API
 
 ### `MobileClassifierApp`
