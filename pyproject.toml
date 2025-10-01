@@ -14,9 +14,13 @@ dependencies = [
     "gradio>=4.0.0",
     "pillow>=9.5.0",
     "numpy>=1.24.0",
+    "PyYAML>=6.0",
     # optional video backends (recommended):
     "imageio>=2.31.0",
 ]
+
+[project.scripts]
+mobile-export-frames = "mobile_gradio_classifier.export_frames:cli"
 
 [project.optional-dependencies]
 video = ["opencv-python>=4.5.0"]
