@@ -31,18 +31,7 @@ import numpy as np
 from PIL import Image
 import gradio as gr
 
-# Optional imports for video reading
-try:
-    import cv2  # type: ignore
-    _HAS_CV2 = True
-except Exception:
-    _HAS_CV2 = False
-
-try:
-    import imageio  # type: ignore
-    _HAS_IMAGEIO = True
-except Exception:
-    _HAS_IMAGEIO = False
+from .video_utils import iter_video_frames
 
 
 @dataclass
@@ -163,43 +152,6 @@ class MobileClassifierApp:
         except Exception as e:
             return f"Email error: {e}"
 
-    # ---------- Video Utilities ----------
-    def _iter_video_frames_cv2(self, path: str, target_fps: float):
-        cap = cv2.VideoCapture(path)
-        if not cap.isOpened():
-            raise RuntimeError("Could not open video with OpenCV.")
-        src_fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
-        step = max(1, int(round(src_fps / max(target_fps, 1e-3))))
-        idx = 0
-        while True:
-            ret, frame = cap.read()
-            if not ret:
-                break
-            if idx % step == 0:
-                # Convert BGR to RGB
-                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                yield Image.fromarray(frame)
-            idx += 1
-        cap.release()
-
-    def _iter_video_frames_imageio(self, path: str, target_fps: float):
-        rdr = imageio.get_reader(path)
-        meta = rdr.get_meta_data()
-        src_fps = meta.get("fps", 30.0)
-        step = max(1, int(round(src_fps / max(target_fps, 1e-3))))
-        for i, frame in enumerate(rdr):
-            if i % step == 0:
-                yield Image.fromarray(frame)
-        rdr.close()
-
-    def _iter_video_frames(self, path: str, target_fps: float):
-        if _HAS_CV2:
-            yield from self._iter_video_frames_cv2(path, target_fps)
-        elif _HAS_IMAGEIO:
-            yield from self._iter_video_frames_imageio(path, target_fps)
-        else:
-            raise ImportError("Please install opencv-python or imageio to enable video processing.")
-
     # ---------- Gradio Handlers ----------
     def predict_image_gr(self, img: np.ndarray, send_email: bool = False) -> Tuple[str, Dict[str, float], str]:
         if img is None:
@@ -226,7 +178,7 @@ class MobileClassifierApp:
         probs_list = []
         t0 = time.time()
         n_frames = 0
-        for frame in self._iter_video_frames(video_path, target_fps=target_fps or self.default_video_fps):
+        for frame in iter_video_frames(video_path, target_fps=target_fps or self.default_video_fps):
             pr = self._predict_image(frame)
             probs_list.append([pr[c] for c in self.classes])
             labels.append(max(pr, key=pr.get))
