@@ -1,0 +1,14 @@
+# Example configuration for the frame export utility.
+# You can list one or more glob patterns; each matching video will be processed.
+input_glob:
+  - "data/videos/*.mp4"
+  - "data/videos/*.mov"
+# Frames from each input video will be written to its own subfolder in this directory.
+output_dir: "exports/frames"
+# Target sampling rate (frames per second) when reading the source video.
+fps: 2.0
+# Output frame size as [width, height] in pixels. Frames are resized with Pillow's LANCZOS filter.
+size: [224, 224]
+# Image format/extension for the exported frames (e.g. "png", "jpeg").
+format: "png"
+# overwrite: true  # Uncomment to replace frames if they already exist.
