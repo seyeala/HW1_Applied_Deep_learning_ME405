@@ -242,7 +242,7 @@ class MobileClassifierApp:
 
             with gr.Tab("Image"):
                 with gr.Row():
-                    img_in = gr.Image(sources=["upload", "webcam"], label="Upload or take a photo", streaming=False)
+                    img_in = gr.Image(source="upload", label="Upload or take a photo", streaming=False)
                     with gr.Column():
                         send_email_chk = gr.Checkbox(label="Send email on detection", value=False)
                         out_label = gr.Label(label="Top Prediction")
@@ -256,7 +256,7 @@ class MobileClassifierApp:
                 with gr.Row():
                     vid_in = gr.Video(
                         label="Upload or record a short video",
-                        sources=["upload", "webcam"],
+                        source="upload",
                     )
                 with gr.Row():
                     fps_in = gr.Slider(0.5, 10.0, value=self.default_video_fps, step=0.5, label="Target FPS for sampling")
@@ -275,7 +275,7 @@ class MobileClassifierApp:
                     live_toggle = gr.Checkbox(label="Enable live classification", value=False)
                     live_freq = gr.Slider(0.5, 5.0, value=1.0, step=0.5, label="Classification frequency (Hz)")
                 with gr.Row():
-                    live_feed = gr.Image(label="Webcam stream", sources=["webcam"], streaming=True)
+                    live_feed = gr.Image(label="Webcam stream", source="webcam", streaming=True)
                     with gr.Column():
                         live_label = gr.Label(label="Live Top Prediction")
                         live_probs = gr.Label(label="Live Class Probabilities")

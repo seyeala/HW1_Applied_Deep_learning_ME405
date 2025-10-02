@@ -11,7 +11,7 @@ requires-python = ">=3.9"
 license = {text = "MIT"}
 authors = [{name = "Course Staff", email = "noreply@example.edu"}]
 dependencies = [
-    "gradio>=4.0.0",
+    "gradio==3.50.2",
     "pillow>=9.5.0",
     "numpy>=1.24.0",
     "PyYAML>=6.0",
