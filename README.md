@@ -5,7 +5,7 @@
 A **model-agnostic, resolution-agnostic** Gradio wrapper for **image and video classification**, built to be **pippable** and easy to run on phones via `share=True` in Colab.
 
 ## Features
-- 📷 Image input (upload by default; set `source="webcam"` in `core.py` to capture directly) & 🎥 Video input (upload by default; set `source="webcam"` to record)
+- 📷 Image input (upload + webcam toggle; reorder the `sources` list in `MobileClassifierApp.build_demo()` if you want the webcam first) & 🎥 Video input (upload or record inline)
 - ⏱ Sample video at target FPS; aggregate by **majority** or **average prob**
 - 🔁 Optional continuous webcam mode with adjustable classification frequency
 - 🔌 Works with **any classifier**:
@@ -14,7 +14,7 @@ A **model-agnostic, resolution-agnostic** Gradio wrapper for **image and video c
 - ✉️ Optional email alerts when a label is detected above threshold
 - 📱 One line to launch a public link for mobile testing
 
-> **Gradio compatibility:** The project now pins **Gradio 3.50.2** for long-term stability. This release expects a single `source` string per media component (e.g., `"upload"` or `"webcam"`). The defaults favor uploads, but you can switch sources in `MobileClassifierApp.build_demo()` if you want webcam-first behavior.
+> **Gradio compatibility:** The project now targets **Gradio 4.x**, which prefers an explicit list of `sources` for media components (e.g., `["upload", "webcam"]`). `MobileClassifierApp.build_demo()` defaults to uploads first, but you can swap the order of that list (or narrow the options) if you want the webcam to appear by default.
 
 ## Install (editable dev mode)
 ```bash
