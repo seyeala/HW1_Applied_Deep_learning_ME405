@@ -130,25 +130,23 @@ Fields:
 ## Repo layout
 ```
 mobile-classifier-repo/
-├─ src/
-│  └─ mobile_gradio_classifier/
-│     ├─ __init__.py
-│     └─ core.py
-├─ examples/
-│  ├─ torch_example.py
-│  ├─ tf_keras_example.py
-│  └─ tf_tflite_example.py
-├─ hw/
-│  ├─ assignment.tex
-│  └─ LICENSE-CC-BY-NC-SA.txt
-├─ notebooks/
-│  └─ demo_colab_stub.ipynb
-├─ docs/
-│  └─ API.md
 ├─ README.md
+├─ LICENSE
 ├─ pyproject.toml
-├─ LICENSE  (MIT for code)
-└─ .gitignore
+├─ applied_deep_learning.pdf
+├─ Starter_of_hw1.ipynb
+├─ examples/
+│  ├─ classes.txt
+│  ├─ frame_export.yaml
+│  ├─ tf_keras_example.py
+│  ├─ tf_tflite_example.py
+│  └─ torch_example.py
+└─ src/
+   └─ mobile_gradio_classifier/
+      ├─ __init__.py
+      ├─ core.py
+      ├─ export_frames.py
+      └─ video_utils.py
 ```
 
 ## License
