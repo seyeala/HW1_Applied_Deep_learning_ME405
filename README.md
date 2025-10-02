@@ -7,6 +7,7 @@ A **model-agnostic, resolution-agnostic** Gradio wrapper for **image and video c
 ## Features
 - 📷 Image input (upload / webcam) & 🎥 Video input (upload / camera)
 - ⏱ Sample video at target FPS; aggregate by **majority** or **average prob**
+- 🔁 Optional continuous webcam mode with adjustable classification frequency
 - 🔌 Works with **any classifier**:
   - Provide a `predict_fn(PIL.Image)->Dict[label, prob]`, **or**
   - Plug a **PyTorch** model + `preprocess_fn`, or use **TensorFlow/TFLite** with a `predict_fn`

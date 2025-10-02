@@ -203,6 +203,38 @@ class MobileClassifierApp:
             msg += " " + self._send_email_if_triggered(top_label, conf, extra=f"[video] {os.path.basename(video_path)}")
         return top_label, msg
 
+    def _blank_live_state(self) -> Dict[str, object]:
+        return {"last_time": 0.0, "label": "", "probs": {}}
+
+    def reset_live_state(self, _: bool) -> Tuple[str, Dict[str, float], Dict[str, object]]:
+        state = self._blank_live_state()
+        return "", {}, state
+
+    def predict_live_gr(
+        self,
+        frame: Optional[np.ndarray],
+        freq_hz: float,
+        active: bool,
+        state: Optional[Dict[str, object]],
+    ) -> Tuple[str, Dict[str, float], Dict[str, object]]:
+        state = state or self._blank_live_state()
+        if not active or frame is None:
+            return state.get("label", ""), state.get("probs", {}), state
+
+        min_interval = 1.0 / max(freq_hz, 1e-6)
+        last_time = float(state.get("last_time", 0.0))
+        now = time.time()
+
+        if now - last_time < min_interval and state.get("label"):
+            return state["label"], state["probs"], state
+
+        pil = Image.fromarray(frame).convert("RGB")
+        probs = self._predict_image(pil)
+        top_label = max(probs, key=probs.get)
+
+        new_state = {"last_time": now, "label": top_label, "probs": probs}
+        return top_label, probs, new_state
+
     # ---------- Build UI ----------
     def build_demo(self) -> gr.Blocks:
         with gr.Blocks(title="Mobile Classifier", css="footer {visibility: hidden}") as demo:
@@ -233,6 +265,28 @@ class MobileClassifierApp:
 
                 vid_btn = gr.Button("Run on Video")
                 vid_btn.click(self.predict_video_gr, inputs=[vid_in, fps_in, agg_in, send_email_chk2], outputs=[vid_out_label, vid_log])
+
+            with gr.Tab("Live Video"):
+                gr.Markdown("### Continuous webcam monitoring\nToggle on to classify frames automatically at a fixed frequency.")
+                with gr.Row():
+                    live_toggle = gr.Checkbox(label="Enable live classification", value=False)
+                    live_freq = gr.Slider(0.5, 5.0, value=1.0, step=0.5, label="Classification frequency (Hz)")
+                with gr.Row():
+                    live_feed = gr.Image(label="Webcam stream", sources=["webcam"], streaming=True)
+                    with gr.Column():
+                        live_label = gr.Label(label="Live Top Prediction")
+                        live_probs = gr.Label(label="Live Class Probabilities")
+                live_state = gr.State(self._blank_live_state())
+                live_feed.stream(
+                    self.predict_live_gr,
+                    inputs=[live_feed, live_freq, live_toggle, live_state],
+                    outputs=[live_label, live_probs, live_state],
+                )
+                live_toggle.change(
+                    self.reset_live_state,
+                    inputs=[live_toggle],
+                    outputs=[live_label, live_probs, live_state],
+                )
 
             gr.Markdown("Tip: Click 'Share' in `launch()` to test from your phone.")
         return demo
