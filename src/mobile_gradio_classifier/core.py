@@ -257,7 +257,6 @@ class MobileClassifierApp:
                     vid_in = gr.Video(
                         label="Upload or record a short video",
                         sources=["upload", "webcam"],
-                        format="mp4",
                     )
                 with gr.Row():
                     fps_in = gr.Slider(0.5, 10.0, value=self.default_video_fps, step=0.5, label="Target FPS for sampling")
